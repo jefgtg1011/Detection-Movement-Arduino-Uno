@@ -1,0 +1,51 @@
+#include <Wire.h> 
+
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27,16,2);
+
+int PIR = 2;
+int statusPin = 0;
+
+const byte
+RELAY(7);
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(PIR, INPUT);
+  pinMode(RELAY, OUTPUT);
+
+  lcd.init(); 
+  lcd.backlight();
+  lcd.blink_on();
+}
+
+void loop()
+{
+  statusPin = digitalRead(PIR);
+  if(statusPin == HIGH)
+  {
+    lcd.clear();
+    lcd.setCursor(4, 0);
+    lcd.print("GERAKAN"); 
+    lcd.setCursor(3, 1);
+    lcd.print("TERDETEKSI");
+    delay(500);
+
+    digitalWrite(RELAY, HIGH);
+    delay(5000);
+  }
+  else
+  {
+    lcd.clear();
+    lcd.setCursor(2, 0);
+    lcd.print("GERAKAN TIDAK"); 
+    lcd.setCursor(3, 1);
+    lcd.print("TERDETEKSI");
+    delay(500);
+
+    digitalWrite(RELAY, LOW);
+    delay(5000);
+  }  
+}
